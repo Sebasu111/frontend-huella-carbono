@@ -186,7 +186,7 @@ const Cuestionario = () => {
       setCargando(false);
 
       try {
-        await axios.post('http://localhost:5000/api/guardar', {
+        await axios.post('https://backend-huella.onrender.com/api/guardar', {
           ...respuestas,
           puntajeTotal: puntaje,
         });
