@@ -1,0 +1,90 @@
+.inicio-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background: linear-gradient(to bottom right, #dfffe2, #f9fffb);
+  padding: 20px;
+}
+
+.inicio-box {
+  background: #ffffff;
+  padding: 50px 45px;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.inicio-logo {
+  height: 110px;
+  margin-bottom: 25px;
+  background-color: white;
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.inicio-titulo {
+  font-size: 32px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.inicio-slogan {
+  font-size: 17px;
+  color: #555;
+  margin-bottom: 35px;
+  line-height: 1.5;
+}
+
+.inicio-btn {
+  padding: 14px 36px;
+  font-size: 16px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.inicio-btn:hover {
+  background-color: #219150;
+  transform: scale(1.04);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+  .inicio-box {
+    padding: 30px 20px;
+  }
+
+  .inicio-logo {
+    height: 80px;
+  }
+
+  .inicio-titulo {
+    font-size: 24px;
+  }
+
+  .inicio-slogan {
+    font-size: 15px;
+  }
+}

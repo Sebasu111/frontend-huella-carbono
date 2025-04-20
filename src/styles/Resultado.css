@@ -1,0 +1,92 @@
+.resultado-card {
+  background-color: #ffffff;
+  padding: 40px 35px;
+  margin-top: 50px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 12px 30px #27ae60;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.resultado-icon {
+  margin: 25px 0 10px;
+  animation: pop 0.4s ease;
+}
+
+.puntaje, .nivel {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #2c3e50;
+}
+
+.recomendacion {
+  margin-top: 25px;
+  font-size: 17px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.barra-container {
+  margin: 30px 0;
+}
+
+.barra-fondo {
+  background-color: #e0e0e0;
+  border-radius: 30px;
+  overflow: hidden;
+  height: 22px;
+  width: 100%;
+}
+
+.barra-color {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.ver-mas-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 12px 24px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.ver-mas-btn:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.salir-btn {
+  margin-top: 13px;
+  padding: 12px 24px;
+  font-size: 15px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.salir-btn:hover {
+  background-color: #c0392b;
+  transform: scale(1.04);
+}
