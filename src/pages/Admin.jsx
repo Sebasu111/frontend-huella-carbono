@@ -25,7 +25,7 @@ const Admin = () => {
 
     const obtenerDatos = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/respuestas');
+        const res = await axios.get('https://backend-huella-carbono.onrender.com/api/respuestas');
         setDatos(res.data);
         procesarDatos(res.data);
       } catch (error) {
