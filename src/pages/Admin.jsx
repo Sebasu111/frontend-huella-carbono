@@ -94,33 +94,31 @@ const Admin = () => {
         </div>
       </div>
 
-      <div className="dashboard-section card">
-        <h3>Nivel de Huella de Carbono</h3>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '10px' }}>
-          {Object.entries(coloresNivel).map(([nivel, color]) => (
-            <div key={nivel} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '16px', height: '16px', backgroundColor: color, borderRadius: '4px' }} />
-              <span>{nivel}</span>
-            </div>
-          ))}
-        </div>
-        <BarChart width={500} height={300} data={porNivel}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis allowDecimals={false} />
-          <Tooltip />
-          <Legend />
-          {porNivel.map((entry, index) => (
-            <Bar
-              key={index}
-              dataKey="value"
-              name={entry.name}
-              fill={coloresNivel[entry.name]}
-              barSize={40}
-            />
-          ))}
-        </BarChart>
+<div className="dashboard-section card">
+  <h3>Nivel de Huella de Carbono</h3>
+  <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '10px' }}>
+    {Object.entries(coloresNivel).map(([nivel, color]) => (
+      <div key={nivel} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ width: '16px', height: '16px', backgroundColor: color, borderRadius: '4px' }} />
+        <span>{nivel}</span>
       </div>
+    ))}
+  </div>
+
+  <BarChart width={500} height={300} data={porNivel}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="name" />
+    <YAxis allowDecimals={false} />
+    <Tooltip />
+    <Legend />
+    <Bar dataKey="value" barSize={60} label={{ position: 'top', fill: '#333', fontWeight: 'bold' }}>
+      {porNivel.map((entry, index) => (
+        <Cell key={`cell-${index}`} fill={coloresNivel[entry.name]} />
+      ))}
+    </Bar>
+  </BarChart>
+</div>
+
 
       <div className="dashboard-section card">
         <h3>Respuestas Registradas</h3>
