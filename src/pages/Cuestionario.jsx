@@ -206,7 +206,7 @@ const Cuestionario = () => {
           <p>Calculando tu huella de carbono...</p>
         </div>
       ) : puntajeTotal !== null ? (
-        <Resultado puntaje={puntajeTotal} onVolver={volver} />
+        <Resultado puntaje={puntajeTotal} respuestas={respuestas} onVolver={volver} />
       ) : (
         <>
           {seccion === 1 && <Seccion1 onChange={handleChange} siguiente={siguiente} />}
