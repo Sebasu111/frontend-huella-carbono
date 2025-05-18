@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   PieChart, Pie, Cell, Tooltip,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer
 } from 'recharts';
 
 const coloresRol = ['#3498db', '#9b59b6', '#e67e22', '#2ecc71'];
@@ -18,6 +18,8 @@ const Admin = () => {
   const [datos, setDatos] = useState([]);
   const [porRol, setPorRol] = useState([]);
   const [porNivel, setPorNivel] = useState([]);
+  const [seccionSeleccionada, setSeccionSeleccionada] = useState('Transporte');
+  const [estadisticasSeccion, setEstadisticasSeccion] = useState([]);
 
   useEffect(() => {
     const logueado = localStorage.getItem('adminLogueado');
@@ -36,6 +38,18 @@ const Admin = () => {
     obtenerDatos();
   }, [navigate]);
 
+  useEffect(() => {
+    if (datos.length > 0) {
+      const clave = {
+        Transporte: 'transporte',
+        Electricidad: 'dispositivos',
+        Residuos: 'clasificacion',
+        Sostenibilidad: 'concepto'
+      }[seccionSeleccionada];
+      calcularEstadisticasPorSeccion(clave);
+    }
+  }, [seccionSeleccionada, datos]);
+
   const procesarDatos = (data) => {
     const conteoRol = {};
     const conteoNivel = { Baja: 0, Media: 0, Alta: 0 };
@@ -52,41 +66,62 @@ const Admin = () => {
     setPorNivel(Object.entries(conteoNivel).map(([name, value]) => ({ name, value })));
   };
 
+  const calcularEstadisticasPorSeccion = (seccion) => {
+    const conteo = {};
+    datos.forEach((d) => {
+      if (!d[seccion]) return;
+      const respuestas = Array.isArray(d[seccion]) ? d[seccion] : [d[seccion]];
+      respuestas.forEach((r) => {
+        conteo[r] = (conteo[r] || 0) + 1;
+      });
+    });
+    const resultado = Object.entries(conteo).map(([name, value]) => ({ name, value }));
+    setEstadisticasSeccion(resultado);
+  };
+
   const cerrarSesion = () => {
     localStorage.removeItem('adminLogueado');
     navigate('/login');
   };
 
   return (
-    <div className="admin-container">
-      <div className="admin-header">
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'Segoe UI' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', marginBottom: '30px' }}>
         <h2>📊 Panel de Administración</h2>
-        <button onClick={cerrarSesion}>Cerrar sesión</button>
+        <button
+          onClick={cerrarSesion}
+          style={{ background: '#e74c3c', color: '#fff', padding: '10px 16px', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+        >
+          Cerrar sesión
+        </button>
       </div>
 
-      <div className="dashboard-section card">
+      {/* Usuarios por Rol */}
+      <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <h3>Usuarios por Rol</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '40px' }}>
-          <PieChart width={400} height={300}>
-            <Pie
-              data={porRol}
-              cx={200}
-              cy={150}
-              outerRadius={100}
-              labelLine={false}
-              label={({ name, value }) => `${name}: ${value}`}
-              dataKey="value"
-            >
-              {porRol.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={coloresRol[index % coloresRol.length]} stroke="#fff" strokeWidth={2} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-          <div className="leyenda">
+          <ResponsiveContainer width={400} height={300}>
+            <PieChart>
+              <Pie
+                data={porRol}
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                labelLine={false}
+                label={false}
+                dataKey="value"
+              >
+                {porRol.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={coloresRol[index % coloresRol.length]} stroke="#fff" strokeWidth={2} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {porRol.map((entry, index) => (
-              <div key={index} className="leyenda-item">
-                <span className="leyenda-color" style={{ backgroundColor: coloresRol[index % coloresRol.length] }}></span>
+              <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '16px', height: '16px', backgroundColor: coloresRol[index % coloresRol.length], borderRadius: '4px' }} />
                 {entry.name}: {entry.value}
               </div>
             ))}
@@ -94,37 +129,66 @@ const Admin = () => {
         </div>
       </div>
 
-<div className="dashboard-section card">
-  <h3>Nivel de Huella de Carbono</h3>
-  <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '10px' }}>
-    {Object.entries(coloresNivel).map(([nivel, color]) => (
-      <div key={nivel} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div style={{ width: '16px', height: '16px', backgroundColor: color, borderRadius: '4px' }} />
-        <span>{nivel}</span>
+      {/* Nivel de Huella */}
+      <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <h3>Nivel de Huella de Carbono</h3>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '10px' }}>
+          {Object.entries(coloresNivel).map(([nivel, color]) => (
+            <div key={nivel} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '16px', height: '16px', backgroundColor: color, borderRadius: '4px' }} />
+              <span>{nivel}</span>
+            </div>
+          ))}
+        </div>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={porNivel} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" barSize={60} label={{ position: 'insideTop', fill: '#fff', fontWeight: 'bold' }}>
+              {porNivel.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={coloresNivel[entry.name]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
-    ))}
-  </div>
 
-  <BarChart width={500} height={300} data={porNivel}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="name" />
-    <YAxis allowDecimals={false} />
-    <Tooltip />
-    <Legend />
-    <Bar dataKey="value" barSize={60} label={{ position: 'top', fill: '#333', fontWeight: 'bold' }}>
-      {porNivel.map((entry, index) => (
-        <Cell key={`cell-${index}`} fill={coloresNivel[entry.name]} />
-      ))}
-    </Bar>
-  </BarChart>
-</div>
+      {/* Estadísticas por Sección */}
+      <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <h3>Estadísticas por Sección</h3>
+        <label>Selecciona una sección:</label>
+        <select
+          value={seccionSeleccionada}
+          onChange={(e) => setSeccionSeleccionada(e.target.value)}
+          style={{ marginBottom: '20px', padding: '6px 12px', borderRadius: '8px', fontSize: '1rem' }}
+        >
+          <option value="Transporte">Transporte</option>
+          <option value="Electricidad">Electricidad</option>
+          <option value="Residuos">Reducción de Residuos</option>
+          <option value="Sostenibilidad">Conciencia y Sostenibilidad</option>
+        </select>
 
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={estadisticasSeccion}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" barSize={50} fill="#3498db" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
-      <div className="dashboard-section card">
+      {/* Tabla de Respuestas */}
+      <div style={{ background: '#fff', padding: '20px', borderRadius: '16px', marginBottom: '30px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', overflowX: 'auto' }}>
         <h3>Respuestas Registradas</h3>
-        <table>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px' }}>
           <thead>
-            <tr>
+            <tr style={{ backgroundColor: '#f2f2f2' }}>
               <th>#</th>
               <th>Rol</th>
               <th>Puntaje</th>
